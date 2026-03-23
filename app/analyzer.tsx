@@ -94,7 +94,10 @@ export default function Home() {
       {/* Nav */}
       <nav className="bg-white border-b border-gray-200/80 px-6 py-3.5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => { setResult(null); setUrl(''); setError(''); }}
+            className="flex items-center gap-2.5 cursor-pointer"
+          >
             <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center shrink-0">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <rect x="1" y="1" width="5" height="5" rx="1" fill="white" opacity="0.6" />
@@ -104,7 +107,7 @@ export default function Home() {
               </svg>
             </div>
             <span className="font-semibold text-gray-900 text-sm">DataReady</span>
-          </div>
+          </button>
           <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">MVP Demo</span>
         </div>
       </nav>
@@ -116,10 +119,10 @@ export default function Home() {
             <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 inline-block"></span>
             AI Data Pipeline
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-3">
-            From messy web data<br />to AI-ready structure
+          <h1 className="text-6xl text-gray-900 mb-4 leading-[1.1]" style={{ fontFamily: 'var(--font-serif)' }}>
+            From messy web data<br />to <span className="italic text-indigo-600">AI-ready</span> structure
           </h1>
-          <p className="text-gray-500 text-base max-w-md mx-auto">
+          <p className="text-gray-400 text-lg max-w-md mx-auto">
             Paste any business URL. We extract, clean, and structure the data — ready for your AI pipeline.
           </p>
         </div>
