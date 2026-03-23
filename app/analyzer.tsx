@@ -119,7 +119,7 @@ export default function Home() {
             <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 inline-block"></span>
             AI Data Pipeline
           </div>
-          <h1 className="text-6xl text-gray-900 mb-4 leading-[1.1]" style={{ fontFamily: 'var(--font-serif)' }}>
+          <h1 className="text-6xl text-gray-900 mb-4 leading-[1.1]" style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}>
             From messy web data<br />to <span className="italic text-indigo-600">AI-ready</span> structure
           </h1>
           <p className="text-gray-400 text-lg max-w-md mx-auto">
