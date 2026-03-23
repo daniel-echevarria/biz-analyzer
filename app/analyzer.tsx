@@ -18,6 +18,54 @@ type AnalyzeResult = {
 
 const EXAMPLES = ['https://stripe.com', 'https://airbnb.com', 'https://pdm-solutions.com'];
 
+function CopyButton({ data }: { data: Structured }) {
+  const [copied, setCopied] = useState(false);
+
+  function copy() {
+    navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <button
+      onClick={copy}
+      className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-gray-700 transition cursor-pointer"
+    >
+      {copied ? '✓ Copied' : 'Copy JSON'}
+    </button>
+  );
+}
+
+function ExportCSVButton({ data }: { data: Structured }) {
+  function exportCSV() {
+    const headers = ['business_name', 'description', 'category', 'tags'];
+    const row = [
+      `"${data.business_name.replace(/"/g, '""')}"`,
+      `"${data.description.replace(/"/g, '""')}"`,
+      `"${data.category.replace(/"/g, '""')}"`,
+      `"${data.tags.join(', ').replace(/"/g, '""')}"`,
+    ];
+    const csv = [headers.join(','), row.join(',')].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.business_name.toLowerCase().replace(/\s+/g, '-')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <button
+      onClick={exportCSV}
+      className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-gray-700 transition cursor-pointer"
+    >
+      Export CSV
+    </button>
+  );
+}
+
 function ScoreGauge({ score, label }: { score: number; label: string }) {
   const color =
     score >= 75 ? 'text-emerald-500' : score >= 55 ? 'text-amber-500' : 'text-rose-500';
@@ -232,6 +280,11 @@ export default function Home() {
                       </span>
                     ))}
                   </div>
+                  <div className="flex gap-2 mb-4">
+                    <CopyButton data={result.structured} />
+                    <ExportCSVButton data={result.structured} />
+                  </div>
+
                   <details>
                     <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-600 select-none">
                       View JSON output
