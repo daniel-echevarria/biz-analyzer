@@ -88,16 +88,19 @@ export async function POST(req: NextRequest) {
     }
 
     const $ = cheerio.load(html);
-    $('script, style, nav, footer, header, noscript').remove();
+    $('script, style, noscript').remove();
 
-    const rawText = $('body').text().replace(/\s+/g, ' ').trim();
-    const truncated = rawText.slice(0, 4000);
+    // Raw display text: preserve messy whitespace so the "before" panel looks real
+    const rawDisplay = $('body').text().replace(/\t/g, ' ').replace(/\n{3,}/g, '\n\n').trim().slice(0, 3500);
 
-    if (!truncated) {
+    // Clean text for AI: collapsed whitespace, tighter
+    const forAI = rawDisplay.replace(/\s+/g, ' ').trim().slice(0, 4000);
+
+    if (!forAI) {
       return NextResponse.json({ error: 'No readable content found' }, { status: 422 });
     }
 
-    const rawScore = scoreRawText(truncated);
+    const rawScore = scoreRawText(forAI);
 
     const response = await client.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -116,7 +119,7 @@ export async function POST(req: NextRequest) {
 - tags: string[] (3-6 relevant keywords)
 
 Website text:
-${truncated}`,
+${forAI}`,
         },
       ],
     });
@@ -128,7 +131,7 @@ ${truncated}`,
       const structuredScore = scoreStructured(structured);
       return NextResponse.json({
         structured,
-        rawText: truncated.slice(0, 1200),
+        rawText: rawDisplay,
         rawScore,
         structuredScore,
       });
